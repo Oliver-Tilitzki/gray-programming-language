@@ -34,7 +34,7 @@ def run(code):
         def calculate(calculation):
             try:
                 splitted_calculation = []
-                arithmeticoperations = ["+","-","*","/"]
+                arithmeticoperations = ["+","-","*","/","%"]
                 chars = ""
                 inString = False
                 for i in calculation:
@@ -78,8 +78,11 @@ def run(code):
                     return join(raw_value[1:len(raw_value)-1])
                 else:
                     return raw_value
-            except Exception:
-                print("error: can't get value of " + str(raw_value))
+            except:
+                if not raw_value == "":
+                    print("error: can't get value of " + str(raw_value))
+                else:
+                    return ""
         def split_line(line):
             splitted_line = []
             chars = ""
@@ -133,7 +136,10 @@ def run(code):
                                     memory.append(0)
                             memory[int(get_value(splitted_code_line[1]))] = get_value(splitted_code_line[2])
                         elif splitted_code_line[0] == "goto":
-                            counter = int(get_value(splitted_code_line[1])) - 2
+                            if not str(splitted_code_line[1])[0] == "$":
+                                counter = int(get_value(splitted_code_line[1])) - 2
+                            else:
+                                counter = int(code.index("$" + get_value(splitted_code_line[1][1:])))
                         elif splitted_code_line[0] == "wait":
                             time.sleep(int(get_value(splitted_code_line[1])))
                         elif splitted_code_line[0] == "if_equal":
@@ -172,7 +178,8 @@ def run(code):
                                     memory.append(0)
                             memory[int(get_value(splitted_code_line[1]))] = input(get_value(splitted_code_line[2]))
                         else:
-                            print("error in line " + str(counter + 1) + " unknown syntax: " + splitted_code_line[0])
+                            if not splitted_code_line[0][0] == "$":
+                                print("error in line " + str(counter + 1) + " unknown syntax: " + splitted_code_line[0])
             except Exception as e:
                 print("runtime error in line " + str(counter + 1) + ": " + str(e))
             counter += 1
